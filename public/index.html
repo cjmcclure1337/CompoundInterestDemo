@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Generic - Hyperspace by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Header -->
+			<header id="header">
+				<a href="index.html" class="title">DOM Sprint</a>
+				<nav>
+					<ul>
+						<li><a href="index.html">Home</a></li>
+					</ul>
+				</nav>
+			</header>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<section id="main" class="wrapper">
+						<div class="inner">
+							<h1 class="major" id="mainHeader">Compound Interest Demo</h1>
+							<p>One way to accelerate your savings is with <b>Compount Interest</b>.  While simple interest applies the interest rate to your starting investment (or principal) for a set return each period, compount interest applies to the full amount of your savings, including the interest you have already earned.</p>
+							<p>Using the below tool, you can enter your investment and watch the difference between simple interest and interest compounded monthly as the years pass by!</p>
+						
+							<form method="post" action="#">
+								<div class="row gtr-uniform">
+									<div class="col">
+										<input type="text" name="invName" id="invName" value="" placeholder="Name" />
+									</div>
+									<div class="col">
+										<input type="text" name="startingVal" id="startingVal" value="" placeholder="Principal Investment" />
+									</div>
+									<div class="col-2">
+										<input type="text" name="intRate" id="intRate" value="" placeholder="Interest Rate" />
+									</div>
+									<div class="col-1">
+										<h2>%</h2>
+									</div>
+									<div class="col">
+										<input type="button" value="Invest!" class="primary" onclick="createInvestment()" />
+									</div>
+								</div>
+							</form>
+							<div class="table-wrapper">
+								<table id="myTable">
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Age</th>
+											<th>Simple Interest</th>
+											<th>Compound Interest</th>
+											<th>Remove</th>
+										</tr>
+									</thead>
+									<tbody id="myTableBody">
+										
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</section>
+
+			</div>
+
+		<!-- Footer -->
+			<footer id="footer" class="wrapper alt">
+				<div class="inner">
+					<ul class="menu">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+			<script src="assets/js/compIntDemo.js"></script>
+	</body>
+</html>
