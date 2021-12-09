@@ -3,7 +3,7 @@ let d = new Date();
 const table = document.getElementById("myTableBody");
 let interval = 3000;
 
-// TODO: load investments from local storage
+// load investments from local storage
 function getLocalInvestments(){
     let localInvestments = [];
 
@@ -45,6 +45,21 @@ function createInvestment(){
     let invName = document.getElementById("invName").value;
     let startingVal = Number(document.getElementById("startingVal").value);
     let intRate = Number(document.getElementById("intRate").value)/100;
+    //data validation
+    let alphabetRegex = new RegExp("^[a-zA-Z]+$");
+    if(!alphabetRegex.test(invName)) {
+        alert("Investment name can only contain alphabetical characters");
+        return;
+    }
+    if(!startingVal) {
+        alert("Starting principal must be a number");
+        return;
+    }
+    if(!intRate) {
+        alert("Interest rate must be a number");
+        return;
+    }
+
     d = new Date();
     let startingTime = d.getTime();
     // check if blank input
@@ -81,7 +96,7 @@ function addRow(invName, startingVal, intRate){
 // delete record
 function deleteRow(rowID) {
     console.log("Delete Row: ", rowID);
-    //TODO: remove from array by filtering into a copy
+    //remove from array by filtering into a copy
     let newAllInvestments = allInvestments.filter(function(value){ 
         return value.invName !== rowID;
     });
@@ -94,7 +109,7 @@ function deleteRow(rowID) {
         // set local value
         localStorage.setItem("investments", JSON.stringify(allInvestments));
     }
-    //TODO: remove from DOM
+    // remove from DOM
     document.querySelector("#" + rowID).remove();
 }
 
@@ -114,8 +129,12 @@ function updateAge(rowID) {
     //exit the function if element is not found
     if(i === -1) return;
 
-    //read newAge from the DOM
-    newAge = document.querySelector("#" + rowID + " > .newAgeCol > .newAge").value;
+    //read newAge from the DOM and confirm it's a valid entry
+    newAge = Number(document.querySelector("#" + rowID + " > .newAgeCol > .newAge").value);
+    if(!newAge) {
+        alert("Age must be a number");
+        return;
+    }
 
     //calculate starting time needed to reach that current age,then updates the array
     allInvestments[i].startingTime = d.getTime() - (newAge * interval);
