@@ -1,6 +1,7 @@
 let allInvestments = []
 let d = new Date();
 const table = document.getElementById("myTableBody");
+let interval = 3000;
 
 // TODO: load investments from local storage
 function getLocalInvestments(){
@@ -31,7 +32,7 @@ function loadInvestments(){
 //initiates updating the values every 3 seconds
 function updateValues() {
     compUpdate();
-    setTimeout(updateValues, 3000);
+    setTimeout(updateValues, interval);
 }
 
 // start app functionality
@@ -63,24 +64,68 @@ function createInvestment(){
 // takes text input and appends to DOM table
 function addRow(invName, startingVal, intRate){
     // format row to add to dom
-    let newRow = `<tr id="`+invName+`">
-                    <td class="invName">`+invName+`</td>
-                    <td class="age">`+0+`</td>
-                    <td class="simpleInt">`+startingVal+`</td>
-                    <td class="compInt">`+startingVal+`</td>
-                    <td class="delete"><input type="button" value="delete" class="button small" onclick="deleteRow('`+invName+`')" /></td>
+    let newRow = `<tr id="${invName}">
+                    <td class="invName">${invName}</td>
+                    <td class="age">${0}</td>
+                    <td class="simpleInt">${startingVal}</td>
+                    <td class="compInt">${startingVal}</td>
+                    <td class="newAgeCol"><input type="text" name="newAge" class="newAge" value="" placeholder="New Age" /></td>
+                    <td class="updateAge"><input type="button" value="update" class="button small" onclick="updateAge('${invName}')" /></td>
+                    <td class="delete"><input type="button" value="delete" class="button small" onclick="deleteRow('${invName}')" /></td>
                   </tr>`;
                   
     // add formatted row
     table.innerHTML += newRow;
 }
 
+// delete record
 function deleteRow(rowID) {
     console.log("Delete Row: ", rowID);
-    //TODO: remove from array
+    //TODO: remove from array by filtering into a copy
+    let newAllInvestments = allInvestments.filter(function(value){ 
+        return value.invName !== rowID;
+    });
+    
+    // set global array to filtered array values
+    allInvestments = newAllInvestments;
 
+    // save to local storage
+    if (typeof(Storage)){
+        // set local value
+        localStorage.setItem("investments", JSON.stringify(allInvestments));
+    }
     //TODO: remove from DOM
+    document.querySelector("#" + rowID).remove();
+}
 
+//manually adjust the age of a record
+function updateAge(rowID) {
+    d = new Date();
+    let i=-1;
+    let newAge;
+
+    //identify index that matches rowID
+    for(let x=0;x<allInvestments.length;x++) {
+        if(allInvestments[x].invName === rowID) {
+            i=x;
+        }
+    }
+
+    //exit the function if element is not found
+    if(i === -1) return;
+
+    //read newAge from the DOM
+    newAge = document.querySelector("#" + rowID + " > .newAgeCol > .newAge").value;
+
+    //calculate starting time needed to reach that current age,then updates the array
+    allInvestments[i].startingTime = d.getTime() - (newAge * interval);
+    compUpdate();
+
+    // save to local storage
+    if (typeof(Storage)){
+        // set local value
+        localStorage.setItem("investments", JSON.stringify(allInvestments));
+    }
 }
 
 //update table investment values
@@ -93,7 +138,7 @@ function compUpdate(){
     
     //calculate simple and compound interest for each investment
     for(let i=0; i<allInvestments.length; i++) {
-        age = parseInt((updatedTime - allInvestments[i].startingTime) / 5000);
+        age = parseInt((updatedTime - allInvestments[i].startingTime) / interval);
         
         //Simple interest formula: A = P(1 + rt)
         updatedSimple.push(allInvestments[i].startingVal * (1 + (allInvestments[i].intRate * age)));
@@ -104,7 +149,7 @@ function compUpdate(){
 
     //update the DOM with the new actual values
     for(let i=0; i<allInvestments.length; i++) {
-        age = parseInt((updatedTime - allInvestments[i].startingTime) / 5000);
+        age = parseInt((updatedTime - allInvestments[i].startingTime) / interval);
 
         document.querySelector("#" + allInvestments[i].invName + " > .age").innerHTML = age;
         document.querySelector("#" + allInvestments[i].invName + " > .simpleInt").innerHTML = Math.round(updatedSimple[i] * 100) / 100;
