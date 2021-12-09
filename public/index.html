@@ -10,6 +10,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 	</head>
 	<body class="is-preload">
@@ -34,7 +35,7 @@
 							<p>One way to accelerate your savings is with <b>Compound Interest</b>.  While simple interest applies the interest rate to your starting investment (or principal) for a set return each period, compount interest applies to the full amount of your savings, including the interest you have already earned.</p>
 							<p>Using the below tool, you can enter your investment and watch the difference between simple interest and interest compounded monthly as the years pass by!</p>
 						
-							<form method="post" action="#">
+							<form action="#">
 								<div class="row gtr-uniform">
 									<div class="col">
 										<input type="text" name="invName" id="invName" value="" placeholder="Name" />
@@ -57,12 +58,13 @@
 								<table id="myTable">
 									<thead>
 										<tr>
+											<th>Pause</th>
 											<th>Name</th>
+											<th>Interest Rate</th>
 											<th>Age</th>
 											<th>Simple Interest</th>
 											<th>Compound Interest</th>
-											<th>Update Age</th>
-											<th></th>
+											<th colspan="2">Update Age</th>
 											<th>Remove</th>
 										</tr>
 									</thead>

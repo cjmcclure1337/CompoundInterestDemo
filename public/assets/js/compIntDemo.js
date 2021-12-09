@@ -25,7 +25,7 @@ function loadInvestments(){
     // get objects from local storage and parse from string
     allInvestments = getLocalInvestments();
     for(let i = 0; i < allInvestments.length; i++){
-        addRow(allInvestments[i].invName, allInvestments[i].startingVal, allInvestments[i].intRate, allInvestments[i].startingTime);
+        addRow(allInvestments[i].invName, allInvestments[i].startingVal, allInvestments[i].intRate, allInvestments[i].age);
     }
 }
 
@@ -62,12 +62,14 @@ function createInvestment(){
 
     d = new Date();
     let startingTime = d.getTime();
+    let age = 0;
+    let isPaused = false;
     // check if blank input
     if(invName && startingVal && intRate){
         // append to table
-        addRow(invName, startingVal, intRate);
+        addRow(invName, startingVal, intRate, age);
         // add to list of investments
-        allInvestments.push({invName, startingVal, intRate, startingTime})
+        allInvestments.push({invName, startingVal, intRate, startingTime, age, isPaused})
         // utilize local storage
         if (typeof(Storage)){
             // set local value
@@ -77,10 +79,12 @@ function createInvestment(){
 }
 
 // takes text input and appends to DOM table
-function addRow(invName, startingVal, intRate){
-    // format row to add to dom
+function addRow(invName, startingVal, intRate, age){
+    // format row to add to DOM
     let newRow = `<tr id="${invName}">
+                    <td class="playPause"><i value="" class="button small icon solid fas fa-pause" onclick="playPause('${invName}')"></i></td>
                     <td class="invName">${invName}</td>
+                    <td class="invName">${(intRate * 100) + "%"}</td>
                     <td class="age">${0}</td>
                     <td class="simpleInt">${startingVal}</td>
                     <td class="compInt">${startingVal}</td>
@@ -91,6 +95,40 @@ function addRow(invName, startingVal, intRate){
                   
     // add formatted row
     table.innerHTML += newRow;
+}
+
+//Toggle the isPaused value of a record and manage age
+function playPause(rowID) {
+    d = new Date();
+    let ppButton;
+
+    //identify index that matches rowID
+    for(let i=0;i<allInvestments.length;i++) {
+        if(allInvestments[i].invName === rowID) {
+            
+            ppButton = document.querySelector("#" + allInvestments[i].invName + " > .playPause > .button");
+
+            //Before playing, resets starting time based on age so that the record will resume where it left off
+            if(allInvestments[i].isPaused) {
+                console.log("Playing ", rowID);
+                allInvestments[i].startingTime = d.getTime() - (allInvestments[i].age * interval);
+
+                //Change icon to "playing" state
+                ppButton.classList.remove("fa-play");
+                ppButton.classList.add("fa-pause");
+            } else {
+                console.log("Pausing ", rowID);
+                //Change icon to "paused" state
+                ppButton.classList.remove("fa-pause");
+                ppButton.classList.add("fa-play");
+            }
+
+            //toggles paused state
+            allInvestments[i].isPaused = !allInvestments[i].isPaused;
+        }
+    }
+
+    
 }
 
 // delete record
@@ -153,24 +191,26 @@ function compUpdate(){
     let updatedCompound = [];
     d = new Date();
     let updatedTime = d.getTime();
-    let age;
+
+    for(let i=0; i<allInvestments.length; i++) {
+        if(!allInvestments[i].isPaused) {
+            allInvestments[i].age = Math.round((updatedTime - allInvestments[i].startingTime) / interval);
+        }
+    }
     
     //calculate simple and compound interest for each investment
     for(let i=0; i<allInvestments.length; i++) {
-        age = parseInt((updatedTime - allInvestments[i].startingTime) / interval);
         
         //Simple interest formula: A = P(1 + rt)
-        updatedSimple.push(allInvestments[i].startingVal * (1 + (allInvestments[i].intRate * age)));
+        updatedSimple.push(allInvestments[i].startingVal * (1 + (allInvestments[i].intRate * allInvestments[i].age)));
 
         //Compound interest formula: A = P(1 + r/n)^(nt)
-        updatedCompound.push(Math.pow((1 + (allInvestments[i].intRate / 12)),(12 * age)) * allInvestments[i].startingVal);
+        updatedCompound.push(Math.pow((1 + (allInvestments[i].intRate / 12)),(12 * allInvestments[i].age)) * allInvestments[i].startingVal);
     }
 
     //update the DOM with the new actual values
     for(let i=0; i<allInvestments.length; i++) {
-        age = parseInt((updatedTime - allInvestments[i].startingTime) / interval);
-
-        document.querySelector("#" + allInvestments[i].invName + " > .age").innerHTML = age;
+        document.querySelector("#" + allInvestments[i].invName + " > .age").innerHTML = allInvestments[i].age;
         document.querySelector("#" + allInvestments[i].invName + " > .simpleInt").innerHTML = Math.round(updatedSimple[i] * 100) / 100;
         document.querySelector("#" + allInvestments[i].invName + " > .compInt").innerHTML = Math.round(updatedCompound[i] * 100) / 100;
     }

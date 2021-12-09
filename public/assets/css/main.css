@@ -6,6 +6,18 @@
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 */
 
+i.button.small.icon.solid.fas {
+    height: auto;
+	padding: 0;
+}
+
+.icon.solid:before {
+    font-size: 22px;
+    font-weight: 900;
+    margin: 0px;
+    padding: 11px;
+}
+
 html, body, div, span, applet, object,
 iframe, h1, h2, h3, h4, h5, h6, p, blockquote,
 pre, a, abbr, acronym, address, big, cite,
@@ -1881,9 +1893,6 @@ input, select, textarea {
 		input[type="reset"].icon:before,
 		input[type="button"].icon:before,
 		button.icon:before,
-		.button.icon:before {
-			margin-right: 0.75em;
-		}
 
 		input[type="submit"].fit,
 		input[type="reset"].fit,
@@ -1898,7 +1907,12 @@ input, select, textarea {
 		input[type="button"].small,
 		button.small,
 		.button.small {
-			font-size: 0.4em;
+			font-size: 0.65em;
+		}
+
+		input.button.small {
+			padding-left: 10px;
+			padding-right: 10px;
 		}
 
 		input[type="submit"].large,
@@ -3162,7 +3176,7 @@ input, select, textarea {
 			font-size: 1em;
 			font-weight: bold;
 			padding: 0 0.75em 0.75em 0.75em;
-			text-align: left;
+			text-align: center;
 		}
 
 		table thead {
