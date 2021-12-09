@@ -85,9 +85,9 @@ function addRow(invName, startingVal, intRate, age){
                     <td class="playPause"><i value="" class="button small icon solid fas fa-pause" onclick="playPause('${invName}')"></i></td>
                     <td class="invName">${invName}</td>
                     <td class="invName">${(intRate * 100) + "%"}</td>
-                    <td class="age">${0}</td>
-                    <td class="simpleInt">${startingVal}</td>
-                    <td class="compInt">${startingVal}</td>
+                    <td class="age">${0 + " years"}</td>
+                    <td class="simpleInt">${"$ "+startingVal}</td>
+                    <td class="compInt">${"$ "+startingVal}</td>
                     <td class="newAgeCol"><input type="text" name="newAge" class="newAge" value="" placeholder="New Age" /></td>
                     <td class="updateAge"><input type="button" value="update" class="button small" onclick="updateAge('${invName}')" /></td>
                     <td class="delete"><input type="button" value="delete" class="button small" onclick="deleteRow('${invName}')" /></td>
@@ -210,8 +210,8 @@ function compUpdate(){
 
     //update the DOM with the new actual values
     for(let i=0; i<allInvestments.length; i++) {
-        document.querySelector("#" + allInvestments[i].invName + " > .age").innerHTML = allInvestments[i].age;
-        document.querySelector("#" + allInvestments[i].invName + " > .simpleInt").innerHTML = Math.round(updatedSimple[i] * 100) / 100;
-        document.querySelector("#" + allInvestments[i].invName + " > .compInt").innerHTML = Math.round(updatedCompound[i] * 100) / 100;
+        document.querySelector("#" + allInvestments[i].invName + " > .age").innerHTML = allInvestments[i].age + " years";
+        document.querySelector("#" + allInvestments[i].invName + " > .simpleInt").innerHTML = "$ " + (Math.round(updatedSimple[i] * 100) / 100);
+        document.querySelector("#" + allInvestments[i].invName + " > .compInt").innerHTML = "$ " + (Math.round(updatedCompound[i] * 100) / 100);
     }
 }
