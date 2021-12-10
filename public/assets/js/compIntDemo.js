@@ -97,6 +97,57 @@ function addRow(invName, startingVal, intRate, age){
     table.innerHTML += newRow;
 }
 
+//update table investment values
+function compUpdate(){
+    let updatedSimple = [];
+    let updatedCompound = [];
+    d = new Date();
+    let updatedTime = d.getTime();
+
+    for(let i=0; i<allInvestments.length; i++) {
+        if(!allInvestments[i].isPaused) {
+            allInvestments[i].age = Math.round((updatedTime - allInvestments[i].startingTime) / interval);
+        }
+    }
+    
+    //calculate simple and compound interest for each investment
+    for(let i=0; i<allInvestments.length; i++) {
+        
+        //Simple interest formula: A = P(1 + rt)
+        updatedSimple.push(allInvestments[i].startingVal * (1 + (allInvestments[i].intRate * allInvestments[i].age)));
+
+        //Compound interest formula: A = P(1 + r/n)^(nt)
+        updatedCompound.push(Math.pow((1 + (allInvestments[i].intRate / 12)),(12 * allInvestments[i].age)) * allInvestments[i].startingVal);
+    }
+
+    //update the DOM with the new actual values
+    for(let i=0; i<allInvestments.length; i++) {
+        document.querySelector("#" + allInvestments[i].invName + " > .age").innerHTML = allInvestments[i].age + " years";
+        document.querySelector("#" + allInvestments[i].invName + " > .simpleInt").innerHTML = "$ " + (Math.round(updatedSimple[i] * 100) / 100);
+        document.querySelector("#" + allInvestments[i].invName + " > .compInt").innerHTML = "$ " + (Math.round(updatedCompound[i] * 100) / 100);
+    }
+}
+
+// delete record
+function deleteRow(rowID) {
+    console.log("Delete Row: ", rowID);
+    //remove from array by filtering into a copy
+    let newAllInvestments = allInvestments.filter(function(value){ 
+        return value.invName !== rowID;
+    });
+    
+    // set global array to filtered array values
+    allInvestments = newAllInvestments;
+
+    // save to local storage
+    if (typeof(Storage)){
+        // set local value
+        localStorage.setItem("investments", JSON.stringify(allInvestments));
+    }
+    // remove from DOM
+    document.querySelector("#" + rowID).remove();
+}
+
 //Toggle the isPaused value of a record and manage age
 function playPause(rowID) {
     d = new Date();
@@ -127,28 +178,6 @@ function playPause(rowID) {
             allInvestments[i].isPaused = !allInvestments[i].isPaused;
         }
     }
-
-    
-}
-
-// delete record
-function deleteRow(rowID) {
-    console.log("Delete Row: ", rowID);
-    //remove from array by filtering into a copy
-    let newAllInvestments = allInvestments.filter(function(value){ 
-        return value.invName !== rowID;
-    });
-    
-    // set global array to filtered array values
-    allInvestments = newAllInvestments;
-
-    // save to local storage
-    if (typeof(Storage)){
-        // set local value
-        localStorage.setItem("investments", JSON.stringify(allInvestments));
-    }
-    // remove from DOM
-    document.querySelector("#" + rowID).remove();
 }
 
 //manually adjust the age of a record
@@ -185,33 +214,3 @@ function updateAge(rowID) {
     }
 }
 
-//update table investment values
-function compUpdate(){
-    let updatedSimple = [];
-    let updatedCompound = [];
-    d = new Date();
-    let updatedTime = d.getTime();
-
-    for(let i=0; i<allInvestments.length; i++) {
-        if(!allInvestments[i].isPaused) {
-            allInvestments[i].age = Math.round((updatedTime - allInvestments[i].startingTime) / interval);
-        }
-    }
-    
-    //calculate simple and compound interest for each investment
-    for(let i=0; i<allInvestments.length; i++) {
-        
-        //Simple interest formula: A = P(1 + rt)
-        updatedSimple.push(allInvestments[i].startingVal * (1 + (allInvestments[i].intRate * allInvestments[i].age)));
-
-        //Compound interest formula: A = P(1 + r/n)^(nt)
-        updatedCompound.push(Math.pow((1 + (allInvestments[i].intRate / 12)),(12 * allInvestments[i].age)) * allInvestments[i].startingVal);
-    }
-
-    //update the DOM with the new actual values
-    for(let i=0; i<allInvestments.length; i++) {
-        document.querySelector("#" + allInvestments[i].invName + " > .age").innerHTML = allInvestments[i].age + " years";
-        document.querySelector("#" + allInvestments[i].invName + " > .simpleInt").innerHTML = "$ " + (Math.round(updatedSimple[i] * 100) / 100);
-        document.querySelector("#" + allInvestments[i].invName + " > .compInt").innerHTML = "$ " + (Math.round(updatedCompound[i] * 100) / 100);
-    }
-}
